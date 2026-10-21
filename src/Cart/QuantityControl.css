@@ -1,0 +1,62 @@
+.qc-add,
+.qc-btn {
+  border: 1px solid #6B3515;
+  background: #6B3515;
+  color: #F8F5ED;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.qc-add {
+  min-width: 64px;
+  min-height: 36px;
+  padding: 7px 14px;
+  border-radius: 20px;
+}
+
+.qc-stepper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.qc-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.qc-qty {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  color: #3d2416;
+}
+
+.qc-add:hover,
+.qc-btn:hover {
+  background: #D8B682;
+  color: #3d2416;
+  transform: translateY(-2px);
+}
+
+.qc-add:focus-visible,
+.qc-btn:focus-visible {
+  outline: 2px solid #D8B682;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qc-add,
+  .qc-btn {
+    transition: none;
+  }
+}
