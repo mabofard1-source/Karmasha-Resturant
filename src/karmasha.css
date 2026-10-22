@@ -1221,3 +1221,95 @@ button:active,
     height: calc(100vh - 58px);
   }
 }
+
+.menu-pdf-mobile {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .menu-pdf-page {
+    min-height: 100vh;
+    background: #fffaf0;
+  }
+
+  .menu-pdf-download {
+    display: none;
+  }
+
+  .menu-pdf-frame {
+    display: none;
+  }
+
+  .menu-pdf-mobile {
+    display: grid;
+    width: min(100%, 620px);
+    gap: 18px;
+    margin: 0 auto;
+    padding: 16px 12px 40px;
+  }
+
+  .portrait-menu-section {
+    overflow: hidden;
+    border: 1px solid #f2a51a;
+    border-radius: 16px;
+    background: #fffdf8;
+    box-shadow: 0 5px 18px rgba(91, 24, 15, .08);
+  }
+
+  .portrait-menu-section h2 {
+    margin: 0;
+    padding: 12px 16px;
+    background: #5b180f;
+    color: #f2a51a;
+    font-size: 19px;
+    font-weight: 900;
+  }
+
+  .portrait-menu-items {
+    padding: 4px 14px;
+  }
+
+  .portrait-menu-item {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px solid #f2e5d4;
+    color: #5b180f;
+  }
+
+  .portrait-menu-item:last-child {
+    border-bottom: 0;
+  }
+
+  .portrait-menu-item > strong {
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .portrait-menu-prices {
+    display: flex;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .portrait-menu-prices > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 7px;
+    border-radius: 8px;
+    background: #f2a51a;
+    color: #5b180f;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .portrait-menu-prices small {
+    font-size: 9px;
+    font-weight: 800;
+  }
+}

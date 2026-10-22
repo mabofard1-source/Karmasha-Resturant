@@ -685,6 +685,24 @@ function MenuPdfPage() {
         <strong>منيو قرمشة</strong>
         <a className="menu-pdf-download" href="/assets/karmasha-menu.pdf" download>تحميل المنيو</a>
       </header>
+      <div className="menu-pdf-mobile" aria-label="منيو قرمشة بتنسيق مناسب للموبايل">
+        {menu.map((section) => (
+          <section className="portrait-menu-section" key={section.title}>
+            <h2>{section.title}</h2>
+            <div className="portrait-menu-items">
+              {section.items.map(([name, priceM, priceL], index) => (
+                <article className="portrait-menu-item" key={`${name}-${index}`}>
+                  <strong>{name}</strong>
+                  <div className="portrait-menu-prices">
+                    {priceM != null && <span><small>M</small>{priceM}<small>ج.م</small></span>}
+                    {priceL != null && <span><small>L</small>{priceL}<small>ج.م</small></span>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
       <iframe className="menu-pdf-frame" src="/assets/karmasha-menu.pdf#toolbar=1" title="منيو قرمشة PDF" />
     </main>
   );
