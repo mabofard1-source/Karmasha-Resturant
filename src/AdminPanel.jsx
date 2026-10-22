@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient.js';
 
 const ADMIN_EMAIL = 'mabofard1@gmail.com';
-const categoryOptions = ['الساندوتشات', 'كريب الدجاج', 'كريب اللحوم', 'كريب الجبن', 'الإضافات', 'كريبات فريش', 'مكس قرمشة', 'الجديد من قرمشة'];
+const categoryOptions = ['البيتزات', 'كريب الدجاج', 'كريب اللحوم', 'كريب الجبن', 'الإضافات', 'كريبات فريش', 'مكس قرمشة', 'الجديد من قرمشة'];
 const karmashaCategories = new Set(categoryOptions);
 const artOptions = ['sandwiches'];
 
 const emptyForm = {
   name: '',
   description: '',
-  category: 'الساندوتشات',
-  section_title: 'الساندوتشات',
+  category: 'البيتزات',
+  section_title: 'البيتزات',
   price_m: '',
   price_l: '',
   image_url: '',
