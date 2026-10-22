@@ -6,6 +6,7 @@ import { CartProvider } from './Cart/CartContext.jsx';
 import QuantityControl from './Cart/QuantityControl.jsx';
 import CartDrawer from './Cart/CartDrawer.jsx';
 import Checkout from './Cart/Checkout.jsx';
+import { supabase } from './supabaseClient.js';
 
 const menu = [
   { category: 'فراخ', title: 'ساندوتشات فراخ', image: 'sandwiches', items: [
@@ -82,7 +83,7 @@ function MenuCard({ section, term }) {
         </div>
         <MenuArt type={section.image} />
       </header>
-      {items.map(([name, smallPrice, largePrice]) => {
+      {items.map(([name, smallPrice, largePrice, itemId]) => {
         const variants = [
           smallPrice != null && { size: 'M', price: smallPrice },
           largePrice != null && { size: 'L', price: largePrice }
@@ -92,7 +93,7 @@ function MenuCard({ section, term }) {
             <span className="item-name">{name}</span>
             <div className="kc-item-end kc-size-options">
               {variants.map(({ size, price }) => {
-                const product = { id: `${section.title}::${name}::${size}`, name: `${name} (${size})`, price: Number(price) };
+                const product = { id: itemId ? `${itemId}::${size}` : `${section.title}::${name}::${size}`, name: `${name} (${size})`, price: Number(price) };
                 return (
                   <div className="kc-size-option" key={size}>
                     <span className="item-price"><small>{size}</small> {price} <small>ج.م</small></span>
@@ -117,12 +118,44 @@ function MenuArt() {
 }
 function CafeSite() {
   const [activeCategory, setActiveCategory] = useState('الكل');
-  const menuSections = menu;
+  const [menuSections, setMenuSections] = useState(menu);
   const [activeSection, setActiveSection] = useState('home');
   const [search, setSearch] = useState('');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const term = search.trim().toLowerCase();
+
+  useEffect(() => {
+    if (!supabase) return undefined;
+    let isCurrent = true;
+
+    supabase
+      .from('menu_items')
+      .select('id, name, category, section_title, price, art_key, sort_order')
+      .eq('is_available', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }) => {
+        if (!isCurrent || !data?.length) return;
+
+        const groups = new Map();
+        data.forEach((row) => {
+          const title = row.section_title || row.category || 'المنيو';
+          const key = `${row.category || 'المنيو'}::${title}`;
+          if (!groups.has(key)) {
+            groups.set(key, {
+              category: row.category || 'المنيو',
+              title,
+              image: row.art_key || 'sandwiches',
+              items: []
+            });
+          }
+          groups.get(key).items.push([row.name, row.price, null, row.id]);
+        });
+        setMenuSections([...groups.values()]);
+      });
+
+    return () => { isCurrent = false; };
+  }, []);
 
   const visibleSections = useMemo(
     () =>
