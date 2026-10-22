@@ -282,9 +282,6 @@ function CafeSite() {
               href="#menu"
               onClick={() => handleNavClick('menu')}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 9h11v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V9Zm11 2h2a2.5 2.5 0 0 1 0 5h-2M8 6c-1-1 1-1.5 0-2.5M12 6c-1-1 1-1.5 0-2.5" />
-              </svg>
               <span>شوف المنيو</span>
             </a>
 
@@ -415,7 +412,7 @@ function CafeSite() {
             <p>
               اختار ساندوتشك المفضل وحدد الحجم اللي يناسبك.
             </p>
-            <a className="menu-pdf-link" href="/assets/karmasha-menu.pdf" target="_blank" rel="noreferrer">المنيو الكامل PDF <span>↗</span></a>
+            <a className="menu-pdf-link" href="/menu-pdf">المنيو الكامل PDF <span>↗</span></a>
           </div>
 
           <div className="menu-tools">
@@ -662,6 +659,10 @@ function App() {
     return <AdminPanel defaultMenu={menu} />;
   }
 
+  if (path === '/menu-pdf') {
+    return <MenuPdfPage />;
+  }
+
   return (
     <CartProvider>
       {path === '/checkout' ? (
@@ -673,6 +674,19 @@ function App() {
         </>
       )}
     </CartProvider>
+  );
+}
+
+function MenuPdfPage() {
+  return (
+    <main className="menu-pdf-page" dir="rtl">
+      <header className="menu-pdf-toolbar">
+        <a className="menu-pdf-back" href="/#menu"><span aria-hidden="true">→</span> العودة للموقع</a>
+        <strong>منيو قرمشة</strong>
+        <a className="menu-pdf-download" href="/assets/karmasha-menu.pdf" download>تحميل المنيو</a>
+      </header>
+      <iframe className="menu-pdf-frame" src="/assets/karmasha-menu.pdf#toolbar=1" title="منيو قرمشة PDF" />
+    </main>
   );
 }
 

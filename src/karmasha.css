@@ -1129,3 +1129,95 @@ button:active,
     height: 300px;
   }
 }
+
+/* Mobile menu shortcut and the in-site PDF viewer use Karmasha's menu colors. */
+.mobile-menu-panel > a.mobile-menu-view {
+  background: #f2a51a;
+  color: #5b180f;
+}
+
+.mobile-menu-panel > a.mobile-menu-view:hover {
+  background: #ffcf43;
+  color: #5b180f;
+}
+
+.menu-pdf-page {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: #5b180f;
+}
+
+.menu-pdf-toolbar {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px clamp(14px, 4vw, 36px);
+  border-bottom: 2px solid #f2a51a;
+  background: #5b180f;
+  color: #fffdf8;
+}
+
+.menu-pdf-toolbar strong {
+  color: #f2a51a;
+  font-size: 17px;
+}
+
+.menu-pdf-back,
+.menu-pdf-download {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #f2a51a;
+  border-radius: 12px;
+  background: #f2a51a;
+  color: #5b180f;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.menu-pdf-back:hover,
+.menu-pdf-download:hover {
+  background: #ffcf43;
+  transform: translateY(-2px);
+}
+
+.menu-pdf-frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 64px);
+  flex: 1;
+  border: 0;
+  background: #fffdf8;
+}
+
+@media (max-width: 520px) {
+  .menu-pdf-toolbar {
+    min-height: 58px;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .menu-pdf-toolbar strong {
+    font-size: 14px;
+  }
+
+  .menu-pdf-back,
+  .menu-pdf-download {
+    min-height: 38px;
+    gap: 5px;
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .menu-pdf-frame {
+    height: calc(100vh - 58px);
+  }
+}
