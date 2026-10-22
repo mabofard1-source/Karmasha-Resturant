@@ -10,7 +10,8 @@ const emptyForm = {
   name: '',
   category: 'فراخ',
   section_title: 'ساندوتشات فراخ',
-  price: '',
+  price_m: '',
+  price_l: '',
   image_url: '',
   art_key: 'sandwiches',
   is_available: true
@@ -151,7 +152,8 @@ function AdminPanel({ defaultMenu }) {
       name: form.name.trim(),
       category: form.category,
       section_title: form.section_title.trim() || form.category,
-      price: form.price === '' ? null : Number(form.price),
+      price_m: form.price_m === '' ? null : Number(form.price_m),
+      price_l: form.price_l === '' ? null : Number(form.price_l),
       image_url: form.image_url.trim() || null,
       art_key: form.art_key,
       is_available: Boolean(form.is_available),
@@ -180,7 +182,8 @@ function AdminPanel({ defaultMenu }) {
       name: item.name || '',
       category: item.category || categoryOptions[0],
       section_title: item.section_title || item.category || '',
-      price: item.price ?? '',
+      price_m: item.price_m ?? item.price ?? '',
+      price_l: item.price_l ?? '',
       image_url: item.image_url || '',
       art_key: item.art_key || 'coffee',
       is_available: item.is_available !== false
@@ -216,11 +219,12 @@ function AdminPanel({ defaultMenu }) {
     setBusy(true);
     setError('');
     let sortOrder = 0;
-    const rows = defaultMenu.flatMap((section) => section.items.map(([name, price]) => ({
+    const rows = defaultMenu.flatMap((section) => section.items.map(([name, price_m, price_l]) => ({
       name,
       category: section.category,
       section_title: section.title,
-      price,
+      price_m,
+      price_l: price_l ?? null,
       art_key: section.image,
       image_url: null,
       is_available: true,
@@ -241,7 +245,7 @@ function AdminPanel({ defaultMenu }) {
   const query = normalize(search);
   const filteredItems = query
     ? items.filter((item) =>
-        [item.name, item.category, item.section_title, item.price]
+        [item.name, item.category, item.section_title, item.price_m, item.price_l]
           .some((field) => normalize(field).includes(query))
       )
     : items;
@@ -321,7 +325,8 @@ function AdminPanel({ defaultMenu }) {
             <label>اسم الصنف<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>
             <label>القسم الرئيسي<select value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })}>{categoryOptions.map((category) => <option key={category}>{category}</option>)}</select></label>
             <label>عنوان مجموعة المنيو<input value={form.section_title} onChange={(event) => setForm({ ...form, section_title: event.target.value })} placeholder="مثال: Signature Hot" required /></label>
-            <label>السعر بالجنيه<input type="number" min="0" step="0.01" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} /></label>
+            <label>السعر M بالجنيه<input type="number" min="0" step="0.01" value={form.price_m} onChange={(event) => setForm({ ...form, price_m: event.target.value })} /></label>
+            <label>السعر L بالجنيه<input type="number" min="0" step="0.01" value={form.price_l} onChange={(event) => setForm({ ...form, price_l: event.target.value })} /></label>
             <label>رابط صورة الصنف (اختياري)<input type="url" value={form.image_url} onChange={(event) => setForm({ ...form, image_url: event.target.value })} placeholder="https://..." /></label>
             <label>رسمة القسم<select value={form.art_key} onChange={(event) => setForm({ ...form, art_key: event.target.value })}>{artOptions.map((art) => <option key={art} value={art}>{art}</option>)}</select></label>
             <label className="admin-checkbox"><input type="checkbox" checked={form.is_available} onChange={(event) => setForm({ ...form, is_available: event.target.checked })} /> الصنف متاح للطلب</label>
@@ -336,7 +341,7 @@ function AdminPanel({ defaultMenu }) {
 
         <section className="admin-card admin-list-card">
           <div className="admin-list-heading">
-            <div><h2>أصناف المنيو</h2><p>تقدر تعدّل السعر أو تخفي صنف مؤقتًا.</p></div>
+              <div><h2>أصناف المنيو</h2><p>تقدر تعدّل أسعار M وL أو تخفي صنف مؤقتًا.</p></div>
             <button className="admin-secondary-button" type="button" onClick={loadItems}>تحديث القائمة</button>
           </div>
 
@@ -359,8 +364,8 @@ function AdminPanel({ defaultMenu }) {
           ) : !filteredItems.length ? (
             <div className="admin-empty"><p>مفيش أصناف مطابقة للبحث "{search}".</p></div>
           ) : (
-            <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>الصنف</th><th>القسم</th><th>السعر</th><th>التوفر</th><th>إجراءات</th></tr></thead><tbody>
-              {filteredItems.map((item) => <tr key={item.id}><td><strong>{item.name}</strong></td><td>{item.section_title || item.category}</td><td>{item.price == null ? '—' : `${item.price} ج.م`}</td><td><button className={`admin-availability ${item.is_available ? 'is-available' : ''}`} type="button" onClick={() => toggleAvailability(item)}>{item.is_available ? 'متاح' : 'غير متاح'}</button></td><td><div className="admin-row-actions"><button type="button" onClick={() => editItem(item)}>تعديل</button><button type="button" className="admin-delete-button" onClick={() => deleteItem(item)}>حذف</button></div></td></tr>)}
+            <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>الصنف</th><th>القسم</th><th>M</th><th>L</th><th>التوفر</th><th>إجراءات</th></tr></thead><tbody>
+              {filteredItems.map((item) => <tr key={item.id}><td><strong>{item.name}</strong></td><td>{item.section_title || item.category}</td><td>{item.price_m == null ? '—' : `${item.price_m} ج.م`}</td><td>{item.price_l == null ? '—' : `${item.price_l} ج.م`}</td><td><button className={`admin-availability ${item.is_available ? 'is-available' : ''}`} type="button" onClick={() => toggleAvailability(item)}>{item.is_available ? 'متاح' : 'غير متاح'}</button></td><td><div className="admin-row-actions"><button type="button" onClick={() => editItem(item)}>تعديل</button><button type="button" className="admin-delete-button" onClick={() => deleteItem(item)}>حذف</button></div></td></tr>)}
             </tbody></table></div>
           )}
         </section>

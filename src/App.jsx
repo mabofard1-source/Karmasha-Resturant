@@ -131,7 +131,7 @@ function CafeSite() {
 
     supabase
       .from('menu_items')
-      .select('id, name, category, section_title, price, art_key, sort_order')
+      .select('id, name, category, section_title, price_m, price_l, art_key, sort_order')
       .eq('is_available', true)
       .order('sort_order', { ascending: true })
       .then(({ data }) => {
@@ -152,7 +152,7 @@ function CafeSite() {
               items: []
             });
           }
-          groups.get(key).items.push([row.name, row.price, null, row.id]);
+          groups.get(key).items.push([row.name, row.price_m, row.price_l, row.id]);
         });
         setMenuSections([...groups.values()]);
       });
