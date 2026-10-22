@@ -23,6 +23,9 @@ const isPasswordSetupLink = () =>
   new URLSearchParams(window.location.search).has('code');
 
 function AdminPanel({ defaultMenu }) {
+  const allowedItemKeys = new Set(defaultMenu.flatMap((section) =>
+    section.items.map(([name]) => `${section.category}::${section.title}::${name}`)
+  ));
   const [session, setSession] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [email, setEmail] = useState(ADMIN_EMAIL);
@@ -50,7 +53,11 @@ function AdminPanel({ defaultMenu }) {
       setError(`تعذر تحميل المنيو: ${loadError.message}. راجع أعمدة section_title و art_key و description في قاعدة البيانات.`);
       return;
     }
-    setItems((data || []).filter((item) => karmashaCategories.has(item.category)));
+    setItems((data || []).filter((item) => {
+      const title = item.section_title || item.category;
+      return karmashaCategories.has(item.category) &&
+        allowedItemKeys.has(`${item.category}::${title}::${item.name}`);
+    }));
     setError('');
   };
 

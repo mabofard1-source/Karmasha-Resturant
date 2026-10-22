@@ -47,6 +47,11 @@ const menu = [
   ]}
 ];
 
+const menuItemKey = (category, title, name) => `${category}::${title}::${name}`;
+const allowedMenuItemKeys = new Set(menu.flatMap((section) =>
+  section.items.map(([name]) => menuItemKey(section.category, section.title, name))
+));
+
 const menuDescriptions = {
   'مكس فراخ': 'تشكيلة فراخ مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
   'مشوي صدور': 'شرائح صدور فراخ مشوية مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
@@ -212,9 +217,14 @@ function CafeSite() {
       .eq('is_available', true)
       .order('sort_order', { ascending: true })
       .then(({ data }) => {
-        const karmashaItems = (data || []).filter((row) =>
-          categories.slice(1).includes(row.category)
-        );
+        const seenItems = new Set();
+        const karmashaItems = (data || []).filter((row) => {
+          const title = row.section_title || row.category || 'المنيو';
+          const key = menuItemKey(row.category, title, row.name);
+          if (!allowedMenuItemKeys.has(key) || seenItems.has(key)) return false;
+          seenItems.add(key);
+          return true;
+        });
         if (!isCurrent || !karmashaItems.length) return;
 
         const groups = new Map();
