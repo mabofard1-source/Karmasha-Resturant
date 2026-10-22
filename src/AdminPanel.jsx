@@ -215,10 +215,13 @@ function AdminPanel({ defaultMenu }) {
   };
 
   const importDefaultMenu = async () => {
-    if (!supabase || items.length || !window.confirm('إضافة كل أصناف المنيو الحالي إلى قاعدة البيانات؟')) return;
+    if (!supabase || !window.confirm('إضافة الأصناف الناقصة من منيو قرمشة إلى قاعدة البيانات؟')) return;
     setBusy(true);
     setError('');
-    let sortOrder = 0;
+    const itemKey = (item) => `${item.category}::${item.section_title || item.category}::${item.name}`;
+    const existingKeys = new Set(items.map(itemKey));
+    const seenKeys = new Set();
+    const nextOrder = items.reduce((max, item) => Math.max(max, Number(item.sort_order) || 0), -1) + 1;
     const rows = defaultMenu.flatMap((section) => section.items.map(([name, price_m, price_l]) => ({
       name,
       category: section.category,
@@ -228,15 +231,25 @@ function AdminPanel({ defaultMenu }) {
       art_key: section.image,
       image_url: null,
       is_available: true,
-      sort_order: sortOrder++
-    })));
+      sort_order: nextOrder
+    }))).filter((row) => {
+      const key = itemKey(row);
+      if (existingKeys.has(key) || seenKeys.has(key)) return false;
+      seenKeys.add(key);
+      return true;
+    }).map((row, index) => ({ ...row, sort_order: nextOrder + index }));
+    if (!rows.length) {
+      setBusy(false);
+      setNotice('كل أصناف المنيو موجودة بالفعل في قاعدة البيانات.');
+      return;
+    }
     const { error: importError } = await supabase.from('menu_items').insert(rows);
     setBusy(false);
     if (importError) {
       setError(`تعذر استيراد المنيو: ${importError.message}`);
       return;
     }
-    setNotice(`تم استيراد ${rows.length} صنف. قدّم تحديثًا للموقع لعرض المنيو من قاعدة البيانات.`);
+    setNotice(`تمت إضافة ${rows.length} صنف ناقص من منيو قرمشة.`);
     await loadItems();
   };
 
@@ -342,7 +355,10 @@ function AdminPanel({ defaultMenu }) {
         <section className="admin-card admin-list-card">
           <div className="admin-list-heading">
               <div><h2>أصناف المنيو</h2><p>تقدر تعدّل أسعار M وL أو تخفي صنف مؤقتًا.</p></div>
-            <button className="admin-secondary-button" type="button" onClick={loadItems}>تحديث القائمة</button>
+            <div className="admin-row-actions">
+              <button className="admin-primary-button" type="button" onClick={importDefaultMenu} disabled={busy}>{busy ? 'جارٍ الإضافة...' : 'إضافة أصناف قرمشة الناقصة'}</button>
+              <button className="admin-secondary-button" type="button" onClick={loadItems}>تحديث القائمة</button>
+            </div>
           </div>
 
           {items.length > 0 && (
@@ -358,8 +374,7 @@ function AdminPanel({ defaultMenu }) {
 
           {!items.length ? (
             <div className="admin-empty">
-              <p>قاعدة البيانات لسه مافيهاش أصناف.</p>
-              <button className="admin-primary-button" type="button" onClick={importDefaultMenu} disabled={busy}>{busy ? 'جارٍ الاستيراد...' : 'استيراد المنيو الحالي'}</button>
+              <p>قاعدة البيانات لسه مافيهاش أصناف. استخدم زر إضافة أصناف قرمشة الناقصة لإدخال المنيو.</p>
             </div>
           ) : !filteredItems.length ? (
             <div className="admin-empty"><p>مفيش أصناف مطابقة للبحث "{search}".</p></div>
