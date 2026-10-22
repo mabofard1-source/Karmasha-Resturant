@@ -428,18 +428,20 @@ body {
 
 .karmasha-facebook-link {
   display: inline-flex;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-radius: 22px;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
   background: #e9f0ff;
   color: #1555a2;
-  font-size: 11px;
+  font-size: 23px;
   font-weight: 800;
 }
 
 .karmasha-facebook-link svg {
-  font-size: 17px;
+  font-size: 23px;
 }
 
 .karmasha-facebook-link b {

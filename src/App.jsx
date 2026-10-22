@@ -590,8 +590,8 @@ function CafeSite() {
               </article>
 
               <article className="location-card social-card">
-                <div><span className="footer-label">تابعونا</span><h3>قرمشة على فيسبوك</h3></div>
-                <a className="karmasha-facebook-link" href="https://www.facebook.com/amr.shaban.71868" target="_blank" rel="noreferrer" aria-label="صفحة قرمشة على فيسبوك"><FaFacebookF /><span>افتح صفحتنا</span><b>↗</b></a>
+                <span className="footer-label">تابعونا</span>
+                <a className="karmasha-facebook-link" href="https://www.facebook.com/amr.shaban.71868" target="_blank" rel="noreferrer" aria-label="صفحة قرمشة على فيسبوك"><FaFacebookF /></a>
               </article>
             </div>
             <div className="map-card karmasha-map-card">
