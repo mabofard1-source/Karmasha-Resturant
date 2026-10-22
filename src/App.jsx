@@ -136,13 +136,13 @@ const categories = ['الكل', 'البيتزات', 'الباستات', 'كري�
 function Brand({ footer = false, onClick }) {
   return (
     <a
-      className={footer ? 'footer-brand' : 'brand'}
+      className={footer ? 'footer-brand' : 'brand navbar-brand'}
       href="#home"
       aria-label="قرمشة - الرئيسية"
       onClick={onClick}
     >
       <img
-        src="/assets/karmasha-logo.png"
+        src={footer ? '/assets/karmasha-logo.png' : '/assets/karmasha-navbar.jpg'}
         alt="شعار قرمشة"
       />
     </a>
@@ -487,7 +487,7 @@ function CafeSite() {
 
           <div className="hero-art" aria-label="شعار قرمشة">
             <div className="art-halo"></div>
-            <img src="/assets/karmasha-logo.png" alt="شعار قرمشة" />
+            <img src="/assets/karmasha-home.jpg" alt="شعار قرمشة" />
             <span className="hero-logo-caption">قرمشة<br/><b>طعم يفرق</b></span>
           </div>
 
