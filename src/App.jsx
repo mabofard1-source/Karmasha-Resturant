@@ -512,7 +512,6 @@ function CafeSite() {
             <p>
               اختار ساندوتشك المفضل وحدد الحجم اللي يناسبك.
             </p>
-            <a className="menu-pdf-link" href="/menu-pdf">المنيو الكامل PDF <span>↗</span></a>
           </div>
 
           <div className="menu-tools">
@@ -766,10 +765,6 @@ function App() {
     return <AdminPanel defaultMenu={adminMenu} />;
   }
 
-  if (path === '/menu-pdf') {
-    return <MenuPdfPage />;
-  }
-
   return (
     <CartProvider>
       {path === '/checkout' ? (
@@ -781,26 +776,6 @@ function App() {
         </>
       )}
     </CartProvider>
-  );
-}
-
-function MenuPdfPage() {
-  return (
-    <main className="menu-pdf-page" dir="rtl">
-      <header className="menu-pdf-toolbar">
-        <a className="menu-pdf-back" href="/#menu"><span aria-hidden="true">→</span> العودة للموقع</a>
-        <strong>منيو قرمشة</strong>
-        <a className="menu-pdf-download" href="/assets/karmasha-menu.pdf" download>تحميل المنيو</a>
-      </header>
-      <div className="menu-pdf-mobile" aria-label="صور منيو قرمشة الأصلية">
-        <img src="/assets/menu-mobile/column-meat-extras.png" alt="منيو كريب اللحوم وكريب الجبن والإضافات" />
-        <img src="/assets/menu-mobile/column-chicken.png" alt="منيو كريب الدجاج" />
-        <img src="/assets/menu-mobile/column-fries.png" alt="منيو كريبات فرايز" />
-        <img src="/assets/menu-mobile/column-karmasha.png" alt="منيو مكس قرمشة" />
-        <img src="/assets/menu-mobile/column-new.png" alt="الأصناف الجديدة من قرمشة" />
-      </div>
-      <iframe className="menu-pdf-frame" src="/assets/karmasha-menu.pdf#toolbar=1" title="منيو قرمشة PDF" />
-    </main>
   );
 }
 

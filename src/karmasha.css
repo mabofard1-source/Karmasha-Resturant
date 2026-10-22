@@ -230,20 +230,6 @@ body {
   line-height: 2;
 }
 
-.menu-pdf-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  padding: 10px 16px;
-  border: 1px solid #e4cda9;
-  border-radius: 24px;
-  background: #fff4dc;
-  color: var(--brown);
-  font-size: 12px;
-  font-weight: 800;
-}
-
 .menu-tools,
 .category-tabs,
 .search-box,
@@ -1025,7 +1011,6 @@ button,
 .call-button,
 .chat-button,
 .karmasha-facebook-link,
-.menu-pdf-link,
 .kc-checkout-link,
 .kc-submit {
   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
@@ -1041,7 +1026,6 @@ button:hover,
 .call-button:hover,
 .chat-button:hover,
 .karmasha-facebook-link:hover,
-.menu-pdf-link:hover,
 .kc-checkout-link:hover,
 .kc-submit:hover {
   transform: translateY(-3px) scale(1.035);
@@ -1058,7 +1042,6 @@ button:active,
 .call-button:active,
 .chat-button:active,
 .karmasha-facebook-link:active,
-.menu-pdf-link:active,
 .kc-checkout-link:active,
 .kc-submit:active {
   transform: translateY(0) scale(.97);
@@ -1074,7 +1057,6 @@ button:active,
   .call-button,
   .chat-button,
   .karmasha-facebook-link,
-  .menu-pdf-link,
   .kc-checkout-link,
   .kc-submit {
     transition: none;
@@ -1089,7 +1071,6 @@ button:active,
   .call-button:hover,
   .chat-button:hover,
   .karmasha-facebook-link:hover,
-  .menu-pdf-link:hover,
   .kc-checkout-link:hover,
   .kc-submit:hover,
   button:active,
@@ -1132,7 +1113,7 @@ button:active,
   }
 }
 
-/* Mobile menu shortcut and the in-site PDF viewer use Karmasha's menu colors. */
+/* Mobile menu shortcut uses Karmasha's menu colors. */
 .mobile-menu-panel > a.mobile-menu-view {
   background: #f2a51a;
   color: #5b180f;
@@ -1141,123 +1122,6 @@ button:active,
 .mobile-menu-panel > a.mobile-menu-view:hover {
   background: #ffcf43;
   color: #5b180f;
-}
-
-.menu-pdf-page {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  background: #5b180f;
-}
-
-.menu-pdf-toolbar {
-  position: sticky;
-  z-index: 2;
-  top: 0;
-  display: flex;
-  min-height: 64px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px clamp(14px, 4vw, 36px);
-  border-bottom: 2px solid #f2a51a;
-  background: #5b180f;
-  color: #fffdf8;
-}
-
-.menu-pdf-toolbar strong {
-  color: #f2a51a;
-  font-size: 17px;
-}
-
-.menu-pdf-back,
-.menu-pdf-download {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border: 1px solid #f2a51a;
-  border-radius: 12px;
-  background: #f2a51a;
-  color: #5b180f;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.menu-pdf-back:hover,
-.menu-pdf-download:hover {
-  background: #ffcf43;
-  transform: translateY(-2px);
-}
-
-.menu-pdf-frame {
-  display: block;
-  width: 100%;
-  height: calc(100vh - 64px);
-  flex: 1;
-  border: 0;
-  background: #fffdf8;
-}
-
-@media (max-width: 520px) {
-  .menu-pdf-toolbar {
-    min-height: 58px;
-    gap: 6px;
-    padding: 8px;
-  }
-
-  .menu-pdf-toolbar strong {
-    font-size: 14px;
-  }
-
-  .menu-pdf-back,
-  .menu-pdf-download {
-    min-height: 38px;
-    gap: 5px;
-    padding: 7px 9px;
-    font-size: 11px;
-  }
-
-  .menu-pdf-frame {
-    height: calc(100vh - 58px);
-  }
-}
-
-.menu-pdf-mobile {
-  display: none;
-}
-
-@media (max-width: 700px) {
-  .menu-pdf-page {
-    min-height: 100vh;
-    background: #fffaf0;
-  }
-
-  .menu-pdf-download {
-    display: none;
-  }
-
-  .menu-pdf-frame {
-    display: none;
-  }
-
-  .menu-pdf-mobile {
-    display: grid;
-    width: min(100%, 620px);
-    gap: 12px;
-    margin: 0 auto;
-    padding: 12px 10px 36px;
-  }
-
-  .menu-pdf-mobile img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 1px solid rgba(242, 165, 26, .55);
-    border-radius: 12px;
-    background: #5b180f;
-  }
 }
 
 /* Make menu prices and add controls easier to see and tap. */
@@ -1292,4 +1156,41 @@ button:active,
 .kc-size-option .qc-qty {
   min-width: 18px;
   font-size: 13px;
+}
+
+/* Keep the brand at the RTL start (right) of both desktop navigation bars. */
+@media (min-width: 641px) {
+  .site-header {
+    direction: rtl;
+  }
+
+  .site-header > .brand {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .site-header > .main-nav {
+    grid-column: 2;
+  }
+
+  .site-header > .header-cta {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
+.site-header > .brand img {
+  object-position: right center;
+}
+
+.kc-checkout > .eyebrow {
+  color: #f2a51a !important;
+}
+
+@media (max-width: 640px) {
+  .story-copy > .text-link {
+    display: flex;
+    width: fit-content;
+    margin: 8px auto 0 0;
+  }
 }
