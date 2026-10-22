@@ -49,6 +49,68 @@ const menu = [
   ]}
 ];
 
+const menuDescriptions = {
+  'مكس فراخ': 'تشكيلة فراخ مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'مشوي صدور': 'شرائح صدور فراخ مشوية مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'كريسبي': 'دجاج مقرمش حار مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'وش استربس': 'استربس فراخ مقرمش مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'سوبريم': 'فراخ مع خضار وجبنة رومي وموتزاريلا وصوص مايونيز.',
+  'رانش': 'فراخ مع خضار وجبنة رومي وموتزاريلا وصوص رانش.',
+  'بانيني فريش': 'قطع بانيه فريش مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'تشيكن طاووق': 'شيش طاووق مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'فاهيتا فراخ': 'شاورما فراخ ومشروم وخضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'سوبر كرانشي': 'دجاج حار مقرمش مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'فراخ هادي': 'فراخ مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'شاورما فراخ': 'دجاج شاورما مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'زنجر قرمشة': 'زنجر فريش وجبنة شيدر وخضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'كوردن بلو': 'دجاج رول محشي جبن مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'مكس قرمشة': 'زنجر وكريسبي وكوردن بلو مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'مكس دجاج': 'مشوي صدور وشيش طاووق وبانيه مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'بانيني بطاطس': 'قطع بانيه وبطاطس مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'قرمشة': 'مشكل فراخ مع صوص رانش وموتزاريلا وخضار وكاتشب ومايونيز.',
+  'مكس كريمي حار': 'قطع زنجر وكريسبي مع صوص شيدر ورومي وخضار وكاتشب ومايونيز.',
+  'مكس لحوم': 'قطع كفتة وبرجر وسجق مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'بسطرمة': 'بسطرمة وسلامي مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'سجق': 'قطع سجق إسكندراني مع كاتشب ومايونيز.',
+  'سوسيس': 'سوسيس مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'هوت دوج': 'شرائح هوت دوج مشوية مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'تشيدر برجر': 'برجر لحم صافي مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'كرانشي': 'قطع بانيه فريش مع رومي مدخن وصوص شيدر.',
+  'ديناميت': 'شيش طاووق وزنجر فريش وبسطرمة ومشروم وشيدر.',
+  'الديناميت': 'شيش طاووق وزنجر فريش وبسطرمة ومشروم وشيدر.',
+  'المطافي': 'صدور كرانشي واستربس فريش حار.',
+  'كلاسيك': 'قطع زنجر فريش مع صوص رانش.',
+  'الكريمي': 'قطع فراخ كريسبي مع صوص كريمي وخضار.',
+  'المدمر': 'قطع صدور كرانشي مع رومي مدخن وصوص تكساس.',
+  'حرب الفراخ': 'استربس وزنجر وكرانشي فريش مع كوردن بلو.',
+  'رابيكيو': 'صدور مشوية ومشروم وصوص باربيكيو.',
+  'بانيه حلواني': 'قطع بانيه فريش مع رومي مدخن وبطاطس وصوص شيدر.',
+  'مكس تكساس': 'قطع فراخ مع صوص تكساس وخضار وجبنة.',
+  'مكس شيدر': 'قطع فراخ مع صوص شيدر وخضار.',
+  'مكس رانش': 'قطع فراخ مع صوص رانش وخضار.',
+  'مكس جبن': 'جبنة رومي وشيدر وكريمي مع خضار وموتزاريلا.',
+  'شيدر': 'جبنة شيدر مع موتزاريلا وخضار.',
+  'مارجريتا': 'جبنة وموتزاريلا مع صلصة طماطم.',
+  'حشو أطراف': 'إضافة جبنة لحشو أطراف البيتزا.',
+  'نص ونص': 'بيتزا بنصفين من اختيارين.',
+  'باكيت بطاطس صغير': 'بطاطس مقلية، حجم صغير.',
+  'باكيت بطاطس كبير': 'بطاطس مقلية، حجم كبير.',
+  'بطاطس شيدر': 'بطاطس مقلية مع صوص شيدر.',
+  'بطاطس موزاريلا': 'بطاطس مقلية مع جبنة موتزاريلا.',
+  'بطاطس هالبينو': 'بطاطس مقلية مع هالبينو.',
+  'كول سلو': 'سلطة كرنب وجزر بصوص كريمي.',
+  'صوص': 'إضافة صوص حسب الاختيار.',
+  'الدبل': 'فراخ مفرمشة وشيش طاووق وبسطرمة وموتزاريلا وكاتشب ومايونيز وشيدر.',
+  'الوحش': 'بانيه وزنجر وكريسبي وخضار وموتزاريلا وكاتشب ومايونيز وصوص شيدر.',
+  'الفرحة': 'زنجر وشيدر وبطاطس ورومي وخضار وموتزاريلا وكاتشب ومايونيز.',
+  'المزارع': 'بطاطس مع خضار وجبنة وصوص.',
+  'خضار': 'خضار طازج مع الجبنة والصلصة.',
+  'تونة': 'تونة مع الخضار والجبنة والصلصة.',
+  'الباكبوظة': 'مشكل فراخ وبسطرمة وموتزاريلا وستيكس وصوص رانش.',
+  'الموزاريلا': 'فراخ فريش وكوردن بلو وسوسيس وموتزاريلا ورومي مدخن وخضار وكاتشب ومايونيز.',
+  'الأشرامان': 'اسأل المطعم عن المكونات التفصيلية لهذا الصنف.'
+};
+
 const categories = ['الكل', 'فراخ', 'لحوم', 'برجر وفرايز', 'جبن وبيتزا', 'إضافات', 'بطاطس', 'الجديد', 'اختيارات تانية'];
 
 function Brand({ footer = false, onClick }) {
@@ -68,9 +130,12 @@ function Brand({ footer = false, onClick }) {
 }
 
 function MenuCard({ section, term }) {
-  const items = section.items.filter(([name]) =>
-    name.toLowerCase().includes(term) || section.title.toLowerCase().includes(term)
-  );
+  const items = section.items.filter(([name, , , , savedDescription]) => {
+    const description = savedDescription || menuDescriptions[name] || '';
+    return name.toLowerCase().includes(term) ||
+      section.title.toLowerCase().includes(term) ||
+      description.toLowerCase().includes(term);
+  });
 
   if (!items.length) return null;
 
@@ -83,14 +148,18 @@ function MenuCard({ section, term }) {
         </div>
         <MenuArt type={section.image} />
       </header>
-      {items.map(([name, smallPrice, largePrice, itemId]) => {
+      {items.map(([name, smallPrice, largePrice, itemId, savedDescription], itemIndex) => {
+        const description = savedDescription || menuDescriptions[name] || '';
         const variants = [
           smallPrice != null && { size: 'M', price: smallPrice },
           largePrice != null && { size: 'L', price: largePrice }
         ].filter(Boolean);
         return (
-          <div className="menu-item" key={name}>
-            <span className="item-name">{name}</span>
+          <div className="menu-item" key={itemId || `${name}-${itemIndex}`}>
+            <div className="menu-item-info">
+              <span className="item-name">{name}</span>
+              {description && <small className="item-note">{description}</small>}
+            </div>
             <div className="kc-item-end kc-size-options">
               {variants.map(({ size, price }) => {
                 const product = { id: itemId ? `${itemId}::${size}` : `${section.title}::${name}::${size}`, name: `${name} (${size})`, price: Number(price) };
@@ -131,7 +200,7 @@ function CafeSite() {
 
     supabase
       .from('menu_items')
-      .select('id, name, category, section_title, price_m, price_l, art_key, sort_order')
+      .select('id, name, category, section_title, price_m, price_l, description, art_key, sort_order')
       .eq('is_available', true)
       .order('sort_order', { ascending: true })
       .then(({ data }) => {
@@ -152,7 +221,7 @@ function CafeSite() {
               items: []
             });
           }
-          groups.get(key).items.push([row.name, row.price_m, row.price_l, row.id]);
+          groups.get(key).items.push([row.name, row.price_m, row.price_l, row.id, row.description]);
         });
         setMenuSections([...groups.values()]);
       });
@@ -168,9 +237,10 @@ function CafeSite() {
           section.category === activeCategory;
 
         const hasMatch = section.items.some(
-          ([name]) =>
+          ([name, , , , savedDescription]) =>
             name.toLowerCase().includes(term) ||
-            section.title.toLowerCase().includes(term)
+            section.title.toLowerCase().includes(term) ||
+            (savedDescription || menuDescriptions[name] || '').toLowerCase().includes(term)
         );
 
         return inCategory && hasMatch;
@@ -182,9 +252,10 @@ function CafeSite() {
     (sum, section) =>
       sum +
       section.items.filter(
-        ([name]) =>
+        ([name, , , , savedDescription]) =>
           name.toLowerCase().includes(term) ||
-          section.title.toLowerCase().includes(term)
+          section.title.toLowerCase().includes(term) ||
+          (savedDescription || menuDescriptions[name] || '').toLowerCase().includes(term)
       ).length,
     0
   );
@@ -656,7 +727,11 @@ function App() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
 
   if (path === '/admin') {
-    return <AdminPanel defaultMenu={menu} />;
+    const adminMenu = menu.map((section) => ({
+      ...section,
+      items: section.items.map(([name, priceM, priceL]) => [name, priceM, priceL, menuDescriptions[name] || ''])
+    }));
+    return <AdminPanel defaultMenu={adminMenu} />;
   }
 
   if (path === '/menu-pdf') {

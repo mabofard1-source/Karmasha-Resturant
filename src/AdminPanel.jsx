@@ -8,6 +8,7 @@ const artOptions = ['sandwiches'];
 
 const emptyForm = {
   name: '',
+  description: '',
   category: 'فراخ',
   section_title: 'ساندوتشات فراخ',
   price_m: '',
@@ -46,7 +47,7 @@ function AdminPanel({ defaultMenu }) {
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: true });
     if (loadError) {
-      setError(`تعذر تحميل المنيو: ${loadError.message}. تأكد من إضافة أعمدة section_title و art_key في قاعدة البيانات.`);
+      setError(`تعذر تحميل المنيو: ${loadError.message}. راجع أعمدة section_title و art_key و description في قاعدة البيانات.`);
       return;
     }
     setItems((data || []).filter((item) => karmashaCategories.has(item.category)));
@@ -150,6 +151,7 @@ function AdminPanel({ defaultMenu }) {
     setNotice('');
     const payload = {
       name: form.name.trim(),
+      description: form.description.trim(),
       category: form.category,
       section_title: form.section_title.trim() || form.category,
       price_m: form.price_m === '' ? null : Number(form.price_m),
@@ -180,6 +182,7 @@ function AdminPanel({ defaultMenu }) {
     setEditingId(item.id);
     setForm({
       name: item.name || '',
+      description: item.description || '',
       category: item.category || categoryOptions[0],
       section_title: item.section_title || item.category || '',
       price_m: item.price_m ?? item.price ?? '',
@@ -219,11 +222,12 @@ function AdminPanel({ defaultMenu }) {
     setBusy(true);
     setError('');
     const itemKey = (item) => `${item.category}::${item.section_title || item.category}::${item.name}`;
-    const existingKeys = new Set(items.map(itemKey));
+    const existingByKey = new Map(items.map((item) => [itemKey(item), item]));
     const seenKeys = new Set();
     const nextOrder = items.reduce((max, item) => Math.max(max, Number(item.sort_order) || 0), -1) + 1;
-    const rows = defaultMenu.flatMap((section) => section.items.map(([name, price_m, price_l]) => ({
+    const defaults = defaultMenu.flatMap((section) => section.items.map(([name, price_m, price_l, description]) => ({
       name,
+      description: description || '',
       category: section.category,
       section_title: section.title,
       price_m,
@@ -234,22 +238,33 @@ function AdminPanel({ defaultMenu }) {
       sort_order: nextOrder
     }))).filter((row) => {
       const key = itemKey(row);
-      if (existingKeys.has(key) || seenKeys.has(key)) return false;
+      if (seenKeys.has(key)) return false;
       seenKeys.add(key);
       return true;
-    }).map((row, index) => ({ ...row, sort_order: nextOrder + index }));
-    if (!rows.length) {
-      setBusy(false);
-      setNotice('كل أصناف المنيو موجودة بالفعل في قاعدة البيانات.');
-      return;
-    }
-    const { error: importError } = await supabase.from('menu_items').insert(rows);
+    });
+    const rows = defaults.filter((row) => !existingByKey.has(itemKey(row)))
+      .map((row, index) => ({ ...row, sort_order: nextOrder + index }));
+    const descriptionUpdates = defaults
+      .map((row) => ({ existing: existingByKey.get(itemKey(row)), description: row.description }))
+      .filter(({ existing, description }) => existing && !existing.description && description);
+    const { error: importError } = rows.length
+      ? await supabase.from('menu_items').insert(rows)
+      : { error: null };
     setBusy(false);
     if (importError) {
       setError(`تعذر استيراد المنيو: ${importError.message}`);
       return;
     }
-    setNotice(`تمت إضافة ${rows.length} صنف ناقص من منيو قرمشة.`);
+    const updateResults = await Promise.all(descriptionUpdates.map(({ existing, description }) =>
+      supabase.from('menu_items').update({ description }).eq('id', existing.id)
+    ));
+    const updateError = updateResults.find((result) => result.error)?.error;
+    if (updateError) {
+      setError(`أُضيفت الأصناف، لكن تعذر تحديث بعض الأوصاف: ${updateError.message}`);
+      await loadItems();
+      return;
+    }
+    setNotice(`تمت إضافة ${rows.length} صنف وتحديث ${descriptionUpdates.length} وصف.`);
     await loadItems();
   };
 
@@ -258,7 +273,7 @@ function AdminPanel({ defaultMenu }) {
   const query = normalize(search);
   const filteredItems = query
     ? items.filter((item) =>
-        [item.name, item.category, item.section_title, item.price_m, item.price_l]
+        [item.name, item.description, item.category, item.section_title, item.price_m, item.price_l]
           .some((field) => normalize(field).includes(query))
       )
     : items;
@@ -336,6 +351,7 @@ function AdminPanel({ defaultMenu }) {
           <h2>{editingId ? 'تعديل صنف' : 'إضافة صنف جديد'}</h2>
           <form className="admin-form admin-item-form" onSubmit={saveItem}>
             <label>اسم الصنف<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>
+            <label>وصف المكونات<textarea rows="3" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} placeholder="اكتب مكونات الصنف" /></label>
             <label>القسم الرئيسي<select value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })}>{categoryOptions.map((category) => <option key={category}>{category}</option>)}</select></label>
             <label>عنوان مجموعة المنيو<input value={form.section_title} onChange={(event) => setForm({ ...form, section_title: event.target.value })} placeholder="مثال: Signature Hot" required /></label>
             <label>السعر M بالجنيه<input type="number" min="0" step="0.01" value={form.price_m} onChange={(event) => setForm({ ...form, price_m: event.target.value })} /></label>
@@ -354,7 +370,7 @@ function AdminPanel({ defaultMenu }) {
 
         <section className="admin-card admin-list-card">
           <div className="admin-list-heading">
-              <div><h2>أصناف المنيو</h2><p>تقدر تعدّل أسعار M وL أو تخفي صنف مؤقتًا.</p></div>
+            <div><h2>أصناف المنيو</h2><p>تقدر تعدّل وصف المكونات وأسعار M وL أو تخفي صنف مؤقتًا.</p></div>
             <div className="admin-row-actions">
               <button className="admin-primary-button" type="button" onClick={importDefaultMenu} disabled={busy}>{busy ? 'جارٍ الإضافة...' : 'إضافة أصناف قرمشة الناقصة'}</button>
               <button className="admin-secondary-button" type="button" onClick={loadItems}>تحديث القائمة</button>
@@ -380,7 +396,7 @@ function AdminPanel({ defaultMenu }) {
             <div className="admin-empty"><p>مفيش أصناف مطابقة للبحث "{search}".</p></div>
           ) : (
             <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>الصنف</th><th>القسم</th><th>M</th><th>L</th><th>التوفر</th><th>إجراءات</th></tr></thead><tbody>
-              {filteredItems.map((item) => <tr key={item.id}><td><strong>{item.name}</strong></td><td>{item.section_title || item.category}</td><td>{item.price_m == null ? '—' : `${item.price_m} ج.م`}</td><td>{item.price_l == null ? '—' : `${item.price_l} ج.م`}</td><td><button className={`admin-availability ${item.is_available ? 'is-available' : ''}`} type="button" onClick={() => toggleAvailability(item)}>{item.is_available ? 'متاح' : 'غير متاح'}</button></td><td><div className="admin-row-actions"><button type="button" onClick={() => editItem(item)}>تعديل</button><button type="button" className="admin-delete-button" onClick={() => deleteItem(item)}>حذف</button></div></td></tr>)}
+              {filteredItems.map((item) => <tr key={item.id}><td><strong>{item.name}</strong>{item.description && <small className="admin-item-description">{item.description}</small>}</td><td>{item.section_title || item.category}</td><td>{item.price_m == null ? '—' : `${item.price_m} ج.م`}</td><td>{item.price_l == null ? '—' : `${item.price_l} ج.م`}</td><td><button className={`admin-availability ${item.is_available ? 'is-available' : ''}`} type="button" onClick={() => toggleAvailability(item)}>{item.is_available ? 'متاح' : 'غير متاح'}</button></td><td><div className="admin-row-actions"><button type="button" onClick={() => editItem(item)}>تعديل</button><button type="button" className="admin-delete-button" onClick={() => deleteItem(item)}>حذف</button></div></td></tr>)}
             </tbody></table></div>
           )}
         </section>

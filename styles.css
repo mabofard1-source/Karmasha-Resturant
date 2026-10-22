@@ -523,7 +523,22 @@ a {
   gap: 6px 10px;
   padding: 11px 1px;
   border-bottom: 1px solid #f1ede6;
-  align-items: baseline;
+  align-items: start;
+}
+
+.menu-item-info {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.menu-item .item-note {
+  grid-column: auto;
+  margin: 0;
+  color: #796858;
+  font-size: 11px;
+  line-height: 1.55;
+  letter-spacing: 0;
 }
 
 .menu-item:last-child {
@@ -1153,7 +1168,8 @@ a {
 }
 
 .admin-form input,
-.admin-form select {
+.admin-form select,
+.admin-form textarea {
   width: 100%;
   min-height: 45px;
   padding: 10px 12px;
@@ -1165,8 +1181,14 @@ a {
   font: inherit;
 }
 
+.admin-form textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+
 .admin-form input:focus,
-.admin-form select:focus {
+.admin-form select:focus,
+.admin-form textarea:focus {
   border-color: #a96b43;
   box-shadow: 0 0 0 3px rgba(169, 107, 67, .13);
 }
@@ -1267,6 +1289,15 @@ a {
 
 .admin-table td strong {
   color: #34271d;
+}
+
+.admin-item-description {
+  display: block;
+  max-width: 380px;
+  margin-top: 4px;
+  color: #806d5a;
+  white-space: normal;
+  line-height: 1.5;
 }
 
 .admin-row-actions {
