@@ -17,6 +17,12 @@ const menu = [
     ['رانش', 135, 165], ['خضار', 125, 145], ['تونة', null, 175],
     ['حشو أطراف', 45, 55], ['نص ونص', null, 155]
   ]},
+  { category: 'الباستات', title: 'الباستات', image: 'sandwiches', items: [
+    ['مكس فراخ', 95], ['شيش طاووق', 95], ['مشوي صدور', 95],
+    ['رانش (حار أو عادي)', 105], ['مكس بسطرمة', 95], ['كرانشي', 95],
+    ['وش مكس', 105], ['وش زنجر', 105], ['وش بسطرمة', 105],
+    ['الهامر', 115], ['السعادة', 130]
+  ]},
   { category: 'كريب الدجاج', title: 'كريب الدجاج', image: 'sandwiches', items: [
     ['بانيه فريش', 90], ['شيش طاووق', 95], ['فاهيتا فراخ', 95], ['مشوي صدور', 100],
     ['سوبر كرانشي', 90], ['فرايدي', 95], ['شاورما فراخ', 95], ['زنجر قرمشة', 90],
@@ -40,7 +46,7 @@ const menu = [
     ['مكس تكساس', 95], ['مكس شيدر', 95], ['مكس رانش', 95]
   ]},
   { category: 'مكس قرمشة', title: 'مكس قرمشة', image: 'sandwiches', items: [
-    ['الدبل', 95], ['الوحش', 90], ['الفرحة', 90], ['الصاروخ', 90]
+    ['الديزل', 95], ['الوحش', 90], ['الفرحة', 90], ['الصاروخ', 90]
   ]},
   { category: 'الجديد من قرمشة', title: 'الجديد من قرمشة', image: 'sandwiches', items: [
     ['الباكبوظة', 120], ['الوصاية', 120], ['الأهرامات', 120]
@@ -125,7 +131,7 @@ const menuDescriptions = {
   'الأهرامات': 'اسأل المطعم عن المكونات التفصيلية لهذا الصنف.'
 };
 
-const categories = ['الكل', 'البيتزات', 'كريب الدجاج', 'كريب اللحوم', 'كريب الجبن', 'الإضافات', 'كريبات فريش', 'مكس قرمشة', 'الجديد من قرمشة'];
+const categories = ['الكل', 'البيتزات', 'الباستات', 'كريب الدجاج', 'كريب اللحوم', 'كريب الجبن', 'الإضافات', 'كريبات فريش', 'مكس قرمشة', 'الجديد من قرمشة'];
 
 function Brand({ footer = false, onClick }) {
   return (
@@ -144,8 +150,10 @@ function Brand({ footer = false, onClick }) {
 }
 
 function MenuCard({ section, term }) {
+  const getDescription = (name, savedDescription) =>
+    savedDescription || (section.category === 'الباستات' ? '' : menuDescriptions[name] || '');
   const items = section.items.filter(([name, , , , savedDescription]) => {
-    const description = savedDescription || menuDescriptions[name] || '';
+    const description = getDescription(name, savedDescription);
     return name.toLowerCase().includes(term) ||
       section.title.toLowerCase().includes(term) ||
       description.toLowerCase().includes(term);
@@ -163,7 +171,7 @@ function MenuCard({ section, term }) {
         <MenuArt type={section.image} />
       </header>
       {items.map(([name, smallPrice, largePrice, itemId, savedDescription], itemIndex) => {
-        const description = savedDescription || menuDescriptions[name] || '';
+        const description = getDescription(name, savedDescription);
         const variants = [
           smallPrice != null && { size: largePrice != null ? 'M' : '', price: smallPrice },
           largePrice != null && { size: smallPrice != null ? 'L' : 'L', price: largePrice }
@@ -240,7 +248,7 @@ function CafeSite() {
               row?.price_m ?? priceM,
               row?.price_l ?? priceL,
               row?.id,
-              row?.description || menuDescriptions[name] || ''
+              row?.description || (section.category === 'الباستات' ? '' : menuDescriptions[name] || '')
             ]];
           })
         }));
@@ -261,7 +269,7 @@ function CafeSite() {
           ([name, , , , savedDescription]) =>
             name.toLowerCase().includes(term) ||
             section.title.toLowerCase().includes(term) ||
-            (savedDescription || menuDescriptions[name] || '').toLowerCase().includes(term)
+            (savedDescription || (section.category === 'الباستات' ? '' : menuDescriptions[name] || '')).toLowerCase().includes(term)
         );
 
         return inCategory && hasMatch;
@@ -276,7 +284,7 @@ function CafeSite() {
         ([name, , , , savedDescription]) =>
           name.toLowerCase().includes(term) ||
           section.title.toLowerCase().includes(term) ||
-          (savedDescription || menuDescriptions[name] || '').toLowerCase().includes(term)
+          (savedDescription || (section.category === 'الباستات' ? '' : menuDescriptions[name] || '')).toLowerCase().includes(term)
       ).length,
     0
   );
@@ -750,7 +758,10 @@ function App() {
   if (path === '/admin') {
     const adminMenu = menu.map((section) => ({
       ...section,
-      items: section.items.map(([name, priceM, priceL]) => [name, priceM, priceL, menuDescriptions[name] || ''])
+      items: section.items.map(([name, priceM, priceL]) => [
+        name, priceM, priceL,
+        section.category === 'الباستات' ? '' : menuDescriptions[name] || ''
+      ])
     }));
     return <AdminPanel defaultMenu={adminMenu} />;
   }
