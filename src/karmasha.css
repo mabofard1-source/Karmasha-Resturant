@@ -1259,3 +1259,37 @@ button:active,
     background: #5b180f;
   }
 }
+
+/* Make menu prices and add controls easier to see and tap. */
+.kc-size-option .item-price {
+  gap: 4px;
+  font-size: 14px;
+}
+
+.kc-size-option .item-price small:first-child {
+  font-size: 11px;
+}
+
+.kc-size-option .item-price small:last-child {
+  font-size: 10px;
+}
+
+.kc-size-option .qc-add {
+  min-width: 50px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.kc-size-option .qc-btn {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  font-size: 20px;
+}
+
+.kc-size-option .qc-qty {
+  min-width: 18px;
+  font-size: 13px;
+}
