@@ -4501,3 +4501,66 @@ input[type="submit"]:active {
     stroke-dashoffset: 0;
   }
 }
+
+/* Karmasha menu palette for the admin panel */
+.admin-shell {
+  background: radial-gradient(circle at 8% 4%, rgba(242, 165, 26, .16), transparent 28rem), #5b180f;
+  color: #fffdf8;
+}
+.admin-shell .admin-topbar { border-color: rgba(242, 165, 26, .55); }
+.admin-shell .admin-back-link,
+.admin-shell .admin-kicker { color: #f2a51a; }
+.admin-shell .admin-heading h1 { color: #fffdf8; }
+.admin-shell .admin-heading p { color: #f4d8c8; }
+.admin-shell .admin-count {
+  border-color: #f2a51a;
+  background: #f2a51a;
+  color: #5b180f;
+}
+.admin-shell .admin-card {
+  border-color: #f2a51a;
+  background: #fffdf8;
+  color: #5b180f;
+  box-shadow: 0 14px 45px rgba(30, 5, 2, .22);
+}
+.admin-shell .admin-card h2,
+.admin-shell .admin-login-card h1,
+.admin-shell .admin-message-card h1 { color: #5b180f; }
+.admin-shell .admin-card > p,
+.admin-shell .admin-login-card > p,
+.admin-shell .admin-message-card > p,
+.admin-shell .admin-list-heading p { color: #76554a; }
+.admin-shell .admin-form label { color: #5b180f; }
+.admin-shell .admin-form input,
+.admin-shell .admin-form select {
+  border-color: #e9d9c9;
+  background: #fff;
+  color: #5b180f;
+}
+.admin-shell .admin-form input:focus,
+.admin-shell .admin-form select:focus {
+  border-color: #f2a51a;
+  box-shadow: 0 0 0 3px rgba(242, 165, 26, .2);
+}
+.admin-shell .admin-form .admin-checkbox input { accent-color: #f2a51a; }
+.admin-shell .admin-primary-button {
+  background: #5b180f;
+  color: #fffdf8;
+}
+.admin-shell .admin-primary-button:hover:not(:disabled) {
+  background: #762116;
+  box-shadow: 0 7px 18px rgba(91, 24, 15, .24);
+}
+.admin-shell .admin-secondary-button,
+.admin-shell .admin-row-actions button,
+.admin-shell .admin-availability {
+  border-color: #f0c554;
+  background: #fff4d9;
+  color: #5b180f;
+}
+.admin-shell .admin-table th { color: #8d5a14; }
+.admin-shell .admin-table td { border-color: #f0e2d0; }
+.admin-shell .admin-table td strong { color: #5b180f; }
+.admin-shell .admin-error { background: #fff0ed; color: #8b2417; }
+.admin-shell .admin-notice { background: #fff4d9; color: #5b180f; }
+.admin-shell .admin-reset-link { color: #762116; }
