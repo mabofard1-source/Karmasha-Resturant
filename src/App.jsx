@@ -135,10 +135,13 @@ function CafeSite() {
       .eq('is_available', true)
       .order('sort_order', { ascending: true })
       .then(({ data }) => {
-        if (!isCurrent || !data?.length) return;
+        const karmashaItems = (data || []).filter((row) =>
+          categories.slice(1).includes(row.category)
+        );
+        if (!isCurrent || !karmashaItems.length) return;
 
         const groups = new Map();
-        data.forEach((row) => {
+        karmashaItems.forEach((row) => {
           const title = row.section_title || row.category || 'المنيو';
           const key = `${row.category || 'المنيو'}::${title}`;
           if (!groups.has(key)) {

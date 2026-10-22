@@ -2,21 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient.js';
 
 const ADMIN_EMAIL = 'mabofard1@gmail.com';
-const categoryOptions = ['Signatures', 'Coffee', 'Tea & Matcha', 'Cold Drinks', 'Food & Sweets', 'Extras'];
-const artOptions = [
-  'signature-hot', 'coffee', 'hot-chocolate', 'hot-drinks', 'matcha', 'boba',
-  'ice-signature', 'ice-tea', 'mojito', 'fresh-cocktail', 'shake', 'frappe',
-  'sandwiches', 'salad', 'dessert', 'croissant', 'waffle', 'pancake',
-  'extras', 'filter-brewing'
-];
+const categoryOptions = ['فراخ', 'لحوم', 'برجر وفرايز', 'جبن وبيتزا', 'إضافات', 'بطاطس', 'الجديد', 'اختيارات تانية'];
+const karmashaCategories = new Set(categoryOptions);
+const artOptions = ['sandwiches'];
 
 const emptyForm = {
   name: '',
-  category: 'Signatures',
-  section_title: 'Signature Hot',
+  category: 'فراخ',
+  section_title: 'ساندوتشات فراخ',
   price: '',
   image_url: '',
-  art_key: 'signature-hot',
+  art_key: 'sandwiches',
   is_available: true
 };
 
@@ -52,7 +48,7 @@ function AdminPanel({ defaultMenu }) {
       setError(`تعذر تحميل المنيو: ${loadError.message}. تأكد من إضافة أعمدة section_title و art_key في قاعدة البيانات.`);
       return;
     }
-    setItems(data || []);
+    setItems((data || []).filter((item) => karmashaCategories.has(item.category)));
     setError('');
   };
 
@@ -270,7 +266,7 @@ function AdminPanel({ defaultMenu }) {
     return (
       <main className="admin-shell">
         <section className="admin-card admin-login-card">
-          <span className="admin-kicker">KOPI · ADMIN</span>
+          <span className="admin-kicker">قرمشة · ADMIN</span>
           <h1>اعمل كلمة مرور</h1>
           <p>اختار كلمة مرور لحساب إدارة المنيو.</p>
           <form className="admin-form" onSubmit={updatePassword}>
@@ -289,7 +285,7 @@ function AdminPanel({ defaultMenu }) {
       <main className="admin-shell">
         <section className="admin-card admin-login-card">
           <a className="admin-back-link" href="/">↙ العودة للموقع</a>
-          <span className="admin-kicker">KOPI SPECIALTY COFFEE</span>
+          <span className="admin-kicker">قرمشة · طعم يفرق</span>
           <h1>دخول الإدارة</h1>
           <p>سجّل الدخول بالبريد الذي استقبل دعوة الإدارة.</p>
           <form className="admin-form" onSubmit={signIn}>
@@ -310,7 +306,7 @@ function AdminPanel({ defaultMenu }) {
       <div className="admin-dashboard">
         <header className="admin-topbar">
           <a className="admin-back-link" href="/">↙ العودة للموقع</a>
-          <span className="admin-kicker">KOPI · ADMIN</span>
+          <span className="admin-kicker">قرمشة · ADMIN</span>
           <button className="admin-secondary-button" type="button" onClick={signOut}>تسجيل الخروج</button>
         </header>
 
