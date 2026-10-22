@@ -723,8 +723,12 @@ body {
 
 .footer-bottom .developer-credit {
   direction: ltr;
-  color: var(--tan);
+  color: #ffcf43;
   font-weight: 800;
+  font-size: 12px;
+  text-shadow: 0 0 7px #f2a51a88, 0 0 16px #f2a51a55;
+  border-color: #f2a51a99;
+  box-shadow: 0 0 12px #f2a51a35;
 }
 
 /* Keep the complete site in the burgundy, saffron and white menu palette. */
