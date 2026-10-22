@@ -224,14 +224,20 @@ function AdminPanel({ defaultMenu }) {
     await loadItems();
   };
 
-  const importDefaultMenu = async () => {
-    if (!supabase || !window.confirm('إضافة الأصناف الناقصة من منيو قرمشة إلى قاعدة البيانات؟')) return;
+  const replaceMenuWithPdf = async () => {
+    if (!supabase || !window.confirm('سيتم استبدال المنيو بالكامل بمحتوى PDF قرمشة، وحذف كل الأصناف والأقسام الأخرى. هل تريد المتابعة؟')) return;
     setBusy(true);
     setError('');
     const itemKey = (item) => `${item.category}::${item.section_title || item.category}::${item.name}`;
-    const existingByKey = new Map(items.map((item) => [itemKey(item), item]));
-    const seenKeys = new Set();
-    const nextOrder = items.reduce((max, item) => Math.max(max, Number(item.sort_order) || 0), -1) + 1;
+    const { data: existingRows, error: fetchError } = await supabase
+      .from('menu_items')
+      .select('*');
+    if (fetchError) {
+      setBusy(false);
+      setError(`تعذر قراءة المنيو الحالية: ${fetchError.message}`);
+      return;
+    }
+
     const defaults = defaultMenu.flatMap((section) => section.items.map(([name, price_m, price_l, description]) => ({
       name,
       description: description || '',
@@ -242,36 +248,67 @@ function AdminPanel({ defaultMenu }) {
       art_key: section.image,
       image_url: null,
       is_available: true,
-      sort_order: nextOrder
-    }))).filter((row) => {
+      sort_order: 0
+    })));
+    const desiredKeys = new Set();
+    const normalizedDefaults = defaults.filter((row) => {
       const key = itemKey(row);
-      if (seenKeys.has(key)) return false;
-      seenKeys.add(key);
+      if (desiredKeys.has(key)) return false;
+      desiredKeys.add(key);
       return true;
+    }).map((row, index) => ({ ...row, sort_order: index }));
+
+    const rowsByKey = new Map();
+    (existingRows || []).forEach((row) => {
+      const key = itemKey(row);
+      if (!rowsByKey.has(key)) rowsByKey.set(key, []);
+      rowsByKey.get(key).push(row);
     });
-    const rows = defaults.filter((row) => !existingByKey.has(itemKey(row)))
-      .map((row, index) => ({ ...row, sort_order: nextOrder + index }));
-    const descriptionUpdates = defaults
-      .map((row) => ({ existing: existingByKey.get(itemKey(row)), description: row.description }))
-      .filter(({ existing, description }) => existing && !existing.description && description);
-    const { error: importError } = rows.length
-      ? await supabase.from('menu_items').insert(rows)
-      : { error: null };
-    setBusy(false);
-    if (importError) {
-      setError(`تعذر استيراد المنيو: ${importError.message}`);
+
+    const updates = [];
+    const inserts = [];
+    const keepIds = new Set();
+    normalizedDefaults.forEach((row) => {
+      const matches = rowsByKey.get(itemKey(row)) || [];
+      const existing = matches.shift();
+      if (!existing) {
+        inserts.push(row);
+        return;
+      }
+      keepIds.add(existing.id);
+      updates.push(supabase.from('menu_items').update(row).eq('id', existing.id));
+    });
+
+    const updateResults = await Promise.all(updates);
+    const failedUpdate = updateResults.find((result) => result.error)?.error;
+    if (failedUpdate) {
+      setBusy(false);
+      setError(`تعذر تحديث أصناف المنيو: ${failedUpdate.message}`);
       return;
     }
-    const updateResults = await Promise.all(descriptionUpdates.map(({ existing, description }) =>
-      supabase.from('menu_items').update({ description }).eq('id', existing.id)
-    ));
-    const updateError = updateResults.find((result) => result.error)?.error;
-    if (updateError) {
-      setError(`أُضيفت الأصناف، لكن تعذر تحديث بعض الأوصاف: ${updateError.message}`);
+
+    const { error: insertError } = inserts.length
+      ? await supabase.from('menu_items').insert(inserts)
+      : { error: null };
+    if (insertError) {
+      setBusy(false);
+      setError(`تعذر إضافة أصناف المنيو: ${insertError.message}`);
+      return;
+    }
+
+    const deleteIds = (existingRows || [])
+      .filter((row) => !keepIds.has(row.id))
+      .map((row) => row.id);
+    const { error: deleteError } = deleteIds.length
+      ? await supabase.from('menu_items').delete().in('id', deleteIds)
+      : { error: null };
+    setBusy(false);
+    if (deleteError) {
+      setError(`تم تحديث الأصناف المطلوبة، لكن تعذر حذف بعض الأصناف القديمة: ${deleteError.message}`);
       await loadItems();
       return;
     }
-    setNotice(`تمت إضافة ${rows.length} صنف وتحديث ${descriptionUpdates.length} وصف.`);
+    setNotice(`تم استبدال المنيو بمحتوى PDF قرمشة. أُضيف ${inserts.length} صنف وتم حذف ${deleteIds.length} صنف قديم أو زائد.`);
     await loadItems();
   };
 
@@ -379,7 +416,7 @@ function AdminPanel({ defaultMenu }) {
           <div className="admin-list-heading">
             <div><h2>أصناف المنيو</h2><p>تقدر تعدّل وصف المكونات وأسعار M وL أو تخفي صنف مؤقتًا.</p></div>
             <div className="admin-row-actions">
-              <button className="admin-primary-button" type="button" onClick={importDefaultMenu} disabled={busy}>{busy ? 'جارٍ الإضافة...' : 'إضافة أصناف قرمشة الناقصة'}</button>
+              <button className="admin-primary-button" type="button" onClick={replaceMenuWithPdf} disabled={busy}>{busy ? 'جارٍ استبدال المنيو...' : 'استبدال المنيو بمنيو PDF قرمشة'}</button>
               <button className="admin-secondary-button" type="button" onClick={loadItems}>تحديث القائمة</button>
             </div>
           </div>
