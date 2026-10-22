@@ -24,7 +24,7 @@ const menu = [
     ['بانيه بطاطس', 80], ['قرمشة', 90], ['مكس كيو حار', 90]
   ]},
   { category: 'كريب اللحوم', title: 'كريب اللحوم', image: 'sandwiches', items: [
-    ['هوت دوج', 90], ['تشيدر برجر', 90], ['سجق', 90], ['مكس لحوم', 105], ['بسطرمة', 105]
+    ['هوت دوج', 90], ['تشيز برجر', 90], ['سجق', 90], ['مكس لحوم', 105], ['بسطرمة', 105]
   ]},
   { category: 'كريب الجبن', title: 'كريب الجبن', image: 'sandwiches', items: [
     ['مكس جبن', 80]
@@ -43,7 +43,7 @@ const menu = [
     ['الدبل', 95], ['الوحش', 90], ['الفرحة', 90], ['الصاروخ', 90]
   ]},
   { category: 'الجديد من قرمشة', title: 'الجديد من قرمشة', image: 'sandwiches', items: [
-    ['الباكبوظة', 120], ['الموزاريلا', 120], ['الأهرامات', 120]
+    ['الباكبوظة', 120], ['الوصاية', 120], ['الأهرامات', 120]
   ]}
 ];
 
@@ -82,6 +82,7 @@ const menuDescriptions = {
   'سوسيس': 'سوسيس مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
   'هوت دوج': 'شرائح هوت دوج مشوية مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
   'تشيدر برجر': 'برجر لحم صافي مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
+  'تشيز برجر': 'برجر لحم صافي مع خضار وجبنة رومي وموتزاريلا ومايونيز.',
   'كرانشي': 'قطع بانيه فريش مع رومي مدخن وصوص شيدر.',
   'كرانشيتكو': 'قطع بانيه فريش مع رومي مدخن وصوص شيدر.',
   'دينامو': 'شيش طاووق واستربس فريش مع كرانشي فرايز.',
@@ -120,7 +121,7 @@ const menuDescriptions = {
   'خضار': 'خضار طازج مع الجبنة والصلصة.',
   'تونة': 'تونة مع الخضار والجبنة والصلصة.',
   'الباكبوظة': 'مشكل فراخ وبسطرمة وموتزاريلا وستيكس وصوص رانش.',
-  'الموزاريلا': 'فراخ فريش وكوردن بلو وسوسيس وموتزاريلا ورومي مدخن وخضار وكاتشب ومايونيز.',
+  'الوصاية': 'فراخ فريش وكوردن بلو وسوسيس وموتزاريلا ورومي مدخن وخضار وكاتشب ومايونيز.',
   'الأهرامات': 'اسأل المطعم عن المكونات التفصيلية لهذا الصنف.'
 };
 
@@ -213,8 +214,7 @@ function CafeSite() {
 
     supabase
       .from('menu_items')
-      .select('id, name, category, section_title, price_m, price_l, description, art_key, sort_order')
-      .eq('is_available', true)
+      .select('id, name, category, section_title, price_m, price_l, description, art_key, sort_order, is_available')
       .order('sort_order', { ascending: true })
       .then(({ data }) => {
         const seenItems = new Set();
@@ -225,23 +225,26 @@ function CafeSite() {
           seenItems.add(key);
           return true;
         });
-        if (!isCurrent || !karmashaItems.length) return;
+        if (!isCurrent) return;
 
-        const groups = new Map();
-        karmashaItems.forEach((row) => {
-          const title = row.section_title || row.category || 'المنيو';
-          const key = `${row.category || 'المنيو'}::${title}`;
-          if (!groups.has(key)) {
-            groups.set(key, {
-              category: row.category || 'المنيو',
-              title,
-              image: row.art_key || 'sandwiches',
-              items: []
-            });
-          }
-          groups.get(key).items.push([row.name, row.price_m, row.price_l, row.id, row.description]);
-        });
-        setMenuSections([...groups.values()]);
+        const itemsByKey = new Map(karmashaItems.map((row) => [
+          menuItemKey(row.category, row.section_title || row.category, row.name), row
+        ]));
+        const pdfMenu = menu.map((section) => ({
+          ...section,
+          items: section.items.flatMap(([name, priceM, priceL]) => {
+            const row = itemsByKey.get(menuItemKey(section.category, section.title, name));
+            if (row?.is_available === false) return [];
+            return [[
+              name,
+              row?.price_m ?? priceM,
+              row?.price_l ?? priceL,
+              row?.id,
+              row?.description || menuDescriptions[name] || ''
+            ]];
+          })
+        }));
+        setMenuSections(pdfMenu);
       });
 
     return () => { isCurrent = false; };
