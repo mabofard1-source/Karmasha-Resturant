@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useCart } from "./CartContext.jsx";
 import QuantityControl from "./QuantityControl.jsx";
+import { menu } from "../menuData.js";
 const WHATSAPP_NUMBER = "201016032853";
 const CURRENCY = "ج.م";
 const PROFILE_KEY = "karmasha-customer";
@@ -54,7 +55,22 @@ function saveProfile({ name, phone, address, landmark }) {
 function buildMessage({ form, fulfillment, items, total, toNumber }) {
   const lines = items.map(({ product, qty }) => {
     const price = toNumber(product.price);
-    const section = product.section || product.category || "قسم غير محدد";
+    const normalizedName = String(product.name)
+      .replace(/\s*\((?:M|L)?\)\s*$/i, "")
+      .trim();
+    const matchingSections = menu
+      .filter((section) => section.items.some(([name]) => name === normalizedName))
+      .map((section) => ({
+        title: section.title || section.category,
+        matchesPrice: section.items.some(([name, priceM, priceL]) =>
+          name === normalizedName && [priceM, priceL].some((menuPrice) =>
+            menuPrice != null && Number(menuPrice) === price
+          )
+        ),
+      }));
+    const section = product.section || product.category ||
+      matchingSections.find((candidate) => candidate.matchesPrice)?.title ||
+      matchingSections[0]?.title || "المنيو";
 
     return `• ${qty} × ${product.name} — القسم: ${section} — ${fmt(price * qty)} ${CURRENCY}`;
   });
