@@ -187,7 +187,7 @@ function MenuCard({ section, term }) {
             </div>
             <div className="kc-item-end kc-size-options">
               {variants.map(({ size, price }) => {
-                const product = { id: itemId ? `${itemId}::${size}` : `${section.title}::${name}::${size}`, name: `${name} (${size})`, price: Number(price) };
+                const product = { id: itemId ? `${itemId}::${size}` : `${section.title}::${name}::${size}`, name: `${name} (${size})`, section: section.title || section.category, price: Number(price) };
                 return (
                   <div className="kc-size-option" key={size}>
                     <span className="item-price">{size && <small>{size}</small>} {price} <small>ج.م</small></span>

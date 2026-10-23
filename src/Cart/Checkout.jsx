@@ -54,8 +54,9 @@ function saveProfile({ name, phone, address, landmark }) {
 function buildMessage({ form, fulfillment, items, total, toNumber }) {
   const lines = items.map(({ product, qty }) => {
     const price = toNumber(product.price);
+    const section = product.section || product.category || "قسم غير محدد";
 
-    return `• ${qty} × ${product.name} — ${fmt(price * qty)} ${CURRENCY}`;
+    return `• ${qty} × ${product.name} — القسم: ${section} — ${fmt(price * qty)} ${CURRENCY}`;
   });
 
   return [
