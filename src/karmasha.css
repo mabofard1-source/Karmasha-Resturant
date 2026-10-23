@@ -432,6 +432,23 @@ body {
   font-weight: 800;
 }
 
+.karmasha-social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.karmasha-social-links .karmasha-instagram-link {
+  background: var(--tan);
+  color: var(--brown);
+}
+
+.karmasha-social-links .karmasha-tiktok-link {
+  background: var(--brown);
+  color: #fff;
+}
+
 .karmasha-facebook-link svg {
   font-size: 23px;
 }
@@ -1184,6 +1201,10 @@ button:active,
 
 /* Keep the brand at the RTL start (right) of both desktop navigation bars. */
 @media (min-width: 641px) {
+  .locations-heading p {
+    margin-top: 24px;
+  }
+
   .site-header {
     direction: rtl;
   }
@@ -1218,3 +1239,4 @@ button:active,
     margin: 8px auto 0 0;
   }
 }
+

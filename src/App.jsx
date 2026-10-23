@@ -1,6 +1,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { FaFacebookF } from 'react-icons/fa';
+import { FaInstagram, FaTiktok } from 'react-icons/fa6';
 import AdminPanel from './AdminPanel.jsx';
 import { CartProvider } from './Cart/CartContext.jsx';
 import QuantityControl from './Cart/QuantityControl.jsx';
@@ -54,6 +55,8 @@ const menu = [
 ];
 
 const menuItemKey = (category, title, name) => `${category}::${title}::${name}`;
+const businessAddress = 'ميدان محمد نجيب، بجوار جنة الفواكة، كفر الزيات، محافظة الغربية، مصر';
+const businessAddressQuery = encodeURIComponent(businessAddress);
 const allowedMenuItemKeys = new Set(menu.flatMap((section) =>
   section.items.map(([name]) => menuItemKey(section.category, section.title, name))
 ));
@@ -487,7 +490,7 @@ function CafeSite() {
 
           <div className="hero-art" aria-label="شعار قرمشة">
             <div className="art-halo"></div>
-            <img src="/assets/karmasha-home.jpg" alt="شعار قرمشة" />
+            <img src="/assets/karmasha-home.png" alt="شعار قرمشة" />
             <span className="hero-logo-caption">قرمشة<br/><b>طعم يفرق</b></span>
           </div>
 
@@ -626,11 +629,11 @@ function CafeSite() {
 </h3>
                   </div>
 
-                  <a className="directions-button" href="https://www.google.com/maps/search/?api=1&query=RRH7%2B9F7%2C%20Kafr%20El-Zayat%20City%2C%20Kafr%20El%20Zayat%2C%20Gharbia%20Governorate%206615148" target="_blank" rel="noreferrer">الاتجاهات <span>↗</span></a>
+                  <a className="directions-button" href={`https://www.google.com/maps/search/?api=1&query=${businessAddressQuery}`} target="_blank" rel="noreferrer">الاتجاهات <span>↗</span></a>
                 </div>
 
                 <p className="address-line">
-                  RRH7+9F7, Kafr El-Zayat City, Kafr El Zayat, Gharbia Governorate 6615148
+                  {businessAddress}
                 </p>
               </article>
 
@@ -690,13 +693,17 @@ function CafeSite() {
 
               <article className="location-card social-card">
                 <span className="footer-label">تابعونا</span>
-                <a className="karmasha-facebook-link" href="https://www.facebook.com/amr.shaban.71868" target="_blank" rel="noreferrer" aria-label="صفحة قرمشة على فيسبوك"><FaFacebookF /></a>
+                <div className="karmasha-social-links">
+                  <a className="karmasha-facebook-link" href="https://www.facebook.com/amr.shaban.71868" target="_blank" rel="noreferrer" aria-label="صفحة قرمشة على فيسبوك"><FaFacebookF /></a>
+                  <a className="karmasha-facebook-link karmasha-instagram-link" href="https://www.instagram.com/qarmashakrip/" target="_blank" rel="noreferrer" aria-label="صفحة قرمشة على إنستجرام"><FaInstagram /></a>
+                  <a className="karmasha-facebook-link karmasha-tiktok-link" href="https://www.tiktok.com/@user5272551187750" target="_blank" rel="noreferrer" aria-label="صفحة قرمشة على تيك توك"><FaTiktok /></a>
+                </div>
               </article>
             </div>
             <div className="map-card karmasha-map-card">
               <iframe
                 title="خريطة موقع قرمشة في كفر الزيات"
-                src="https://www.google.com/maps?q=RRH7%2B9F7%2C%20Kafr%20El-Zayat%20City%2C%20Kafr%20El%20Zayat%2C%20Gharbia%20Governorate%206615148&output=embed"
+                src={`https://www.google.com/maps?q=${businessAddressQuery}&output=embed`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
@@ -714,13 +721,6 @@ function CafeSite() {
             <a href="#home">الرئيسية</a>
             <a href="#menu">المنيو</a>
             <a href="#locations">العنوان والتواصل</a>
-            <a
-              href="https://www.facebook.com/amr.shaban.71868"
-              target="_blank"
-              rel="noreferrer"
-            >
-              فيسبوك ↗
-            </a>
           </nav>
 
           <a href="#home" className="footer-top-button">
