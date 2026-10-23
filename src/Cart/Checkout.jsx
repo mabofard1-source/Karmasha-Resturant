@@ -253,7 +253,15 @@ export default function Checkout() {
     saveProfile(form);
     setSentUrl(url);
 
-    // Open WhatsApp directly from the submit interaction.
+    // On phones, stay in the current page so WhatsApp can open without a new tab.
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    if (isMobile) {
+      clear();
+      window.location.assign(url);
+      return;
+    }
+
+    // Keep the desktop behavior in a separate tab.
     const whatsappWindow = window.open(url, "_blank");
 
     // Keep the order in the cart if the browser blocks the new window.
